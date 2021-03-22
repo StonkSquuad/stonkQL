@@ -17,4 +17,7 @@ export class Stock {
 
   @Field({ nullable: true })
   companyName: string;
+
+  @Field({ nullable: true })
+  stockTicker: string;
 }
