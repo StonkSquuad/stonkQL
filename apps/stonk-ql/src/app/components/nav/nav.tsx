@@ -61,6 +61,7 @@ export const Nav = () => {
           type="text"
           value={searchValue}
           onChange={onSearchChange}
+          placeholder="Ticker or company name"
         ></input>
         <div
           className={[
