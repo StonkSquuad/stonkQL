@@ -1,13 +1,15 @@
 
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { StockHistoricalData } from './stocks/models/stock-historical-data.model';
-import { Stock } from './stocks/models/stock.model';
-import { StockService } from './stocks/stock.service';
+import { StockHistoricalData } from './models/stock-historical-data.model';
+import { Stock } from './models/stock.model';
+import { StockService } from './stock.service';
+
+
 @Resolver()
 export class StockResolver {
 
   constructor(
-    private stockService: StockService
+    private readonly stockService: StockService
   ) {}
 
   @Query(returns => [Stock], { name: 'stock' })

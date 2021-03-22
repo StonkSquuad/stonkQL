@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { StockResolver } from './app.service';
 import { StockModule } from './stocks/stock.module';
 
 
@@ -16,6 +15,5 @@ import { StockModule } from './stocks/stock.module';
     }),
     StockModule
   ],
-  providers: [StockResolver],
 })
 export class AppModule {}

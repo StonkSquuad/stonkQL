@@ -1,5 +1,4 @@
-import { Injectable } from '@nestjs/common';
-import axios from 'axios';
+import { HttpService, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
 
 interface HistoricalStockOptions {
@@ -10,16 +9,24 @@ interface HistoricalStockOptions {
 
 @Injectable()
 export class StockService {
-  private BASE_URL = `https://api.polygon.io/v2`;
+  private static readonly BASE_URL = `https://api.polygon.io/v2`;
+
+  constructor(private readonly httpService: HttpService) {}
 
   async getStock( ticker: string ): Promise<any> {
-    return axios.get(`${this.BASE_URL}/reference/tickers?sort=ticker&search=${ticker}&perpage=50&page=1&apiKey=${process.env.POLYGON_API_KEY}`)
-    .then(function (response) {
-        // handle success
-        return response.data.tickers;
+    return this.httpService.get('/reference/tickers', {
+      baseURL: StockService.BASE_URL,
+      params: {
+        perpage: 100,
+        page: 1,
+        apiKey: process.env.POLYGON_API_KEY,
+        search: ticker,
+        sort: 'ticker'
+      }
     })
-    .catch(function (error) {
-        // handle error
+    .toPromise()
+    .then( (response) =>response.data.tickers)
+    .catch( (error) => {
         console.log(error);
     });
   }
@@ -31,15 +38,18 @@ export class StockService {
           endDate
       } = historicalStockOptions;
 
-    return axios.get(`${this.BASE_URL}/aggs/ticker/${stockTicker}/range/1/day/${moment(startDate).format('YYYY-MM-DD')}/${moment(endDate).format('YYYY-MM-DD')}?unadjusted=true&sort=asc&limit=120&apiKey=${process.env.POLYGON_API_KEY}`)
-    .then(function (response) {
-        // handle success
-        const result = response.data.results;
-        return result.map( ( o ) => {
-            return { date: o.t, close: o.c };
-        });
+    return this.httpService.get(`/aggs/ticker/${stockTicker}/range/1/day/${moment(startDate).format('YYYY-MM-DD')}/${moment(endDate).format('YYYY-MM-DD')}`, {
+      baseURL: StockService.BASE_URL,
+      params: {
+        unadjusted: true,
+        sort: 'asc',
+        limit: 120,
+        apiKey: process.env.POLYGON_API_KEY
+      }
     })
-    .catch(function (error) {
+    .toPromise()
+    .then((response) => response.data.results.map( ( result ) => ({ date: result.t, close: result.c })))
+    .catch((error) => {
         // handle error
         console.log(error);
     });
