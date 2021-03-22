@@ -20,27 +20,6 @@ export class Stock {
   primaryExch: string;
   @Field({ nullable: true })
   updated: string;
-  // @Field()
-  // codes: object[];
   @Field({ nullable: true })
   url: string;
-
-
-  // @Field(type => ID)
-  // id: string;
-
-  // @Field()
-  // name: string;
-
-  // @Field({ nullable: true })
-  // description?: string;
-
-  // @Field({ nullable: true })
-  // price: number;
-
-  // @Field({ nullable: true })
-  // companyName: string;
-
-  // @Field({ nullable: true })
-  // stockTicker: string;
 }

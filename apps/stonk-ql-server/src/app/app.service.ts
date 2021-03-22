@@ -14,4 +14,16 @@ export class StockResolver {
   async getStockPrice(@Args('stockTicker') stockTicker: string) {
     return this.stockService.getStock(stockTicker);
   }
+
+  @Query(returns => [StockHistoricalData], { name: 'stockHistorical' })
+  async getStockHistorical(
+    @Args('stockTicker') stockTicker: string,
+    @Args('startDate') startDate: string,
+    @Args('endDate') endDate: string) {
+    return this.stockService.getStockHistorical({
+      stockTicker,
+      startDate,
+      endDate
+    });
+  }
 }

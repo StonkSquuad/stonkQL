@@ -1,10 +1,10 @@
-import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class StockHistoricalData {
-  @Field(type => Int)
-  date: number;
+  @Field(type => String)
+  date: string;
 
-  @Field(type => Int)
+  @Field(type => Float)
   close: number;
 }
