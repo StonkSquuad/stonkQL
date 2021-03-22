@@ -8,7 +8,7 @@ export class StockService {
     return axios.get(`${this.BASE_URL}/reference/tickers?sort=ticker&search=${ticker}&perpage=50&page=1&apiKey=${process.env.POLYGON_API_KEY}`)
     .then(function (response) {
         // handle success
-        return response.data;
+        return response.data.tickers;
     })
     .catch(function (error) {
         // handle error
