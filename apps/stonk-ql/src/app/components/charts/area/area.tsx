@@ -17,8 +17,9 @@ import { timeFormat } from 'd3-time-format';
 import React, { useCallback, useMemo } from 'react';
 
 type TooltipData = AppleStock;
+console.log(appleStock);
 
-const stock = appleStock.slice(800);
+// const stock = appleStock.slice(800);
 export const background = '#3b6978';
 export const background2 = '#204051';
 export const accentColor = '#edffea';
@@ -39,6 +40,7 @@ const getStockValue = (d: AppleStock) => d.close;
 const bisectDate = bisector<AppleStock, Date>((d) => new Date(d.date)).left;
 
 export type AreaProps = {
+  data: any;
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
@@ -46,6 +48,7 @@ export type AreaProps = {
 
 export default withTooltip<AreaProps, TooltipData>(
   ({
+    data,
     width,
     height,
     margin = { top: 0, right: 0, bottom: 0, left: 0 },
@@ -55,6 +58,7 @@ export default withTooltip<AreaProps, TooltipData>(
     tooltipTop = 0,
     tooltipLeft = 0,
   }: AreaProps & WithTooltipProvidedProps<TooltipData>) => {
+    console.log(data);
     if (width < 10) return null;
 
     // bounds
@@ -66,18 +70,18 @@ export default withTooltip<AreaProps, TooltipData>(
       () =>
         scaleTime({
           range: [margin.left, innerWidth + margin.left],
-          domain: extent(stock, getDate) as [Date, Date],
+          domain: extent(data, getDate) as [Date, Date],
         }),
-      [innerWidth, margin.left]
+      [data, innerWidth, margin.left]
     );
     const stockValueScale = useMemo(
       () =>
         scaleLinear({
           range: [innerHeight + margin.top, margin.top],
-          domain: [0, (max(stock, getStockValue) || 0) + innerHeight / 3],
+          domain: [0, (max(data, getStockValue) || 0) + innerHeight / 3],
           nice: true,
         }),
-      [margin.top, innerHeight]
+      [innerHeight, margin.top, data]
     );
 
     // tooltip handler
@@ -89,9 +93,9 @@ export default withTooltip<AreaProps, TooltipData>(
       ) => {
         const { x } = localPoint(event) || { x: 0 };
         const x0 = dateScale.invert(x);
-        const index = bisectDate(stock, x0, 1);
-        const d0 = stock[index - 1];
-        const d1 = stock[index];
+        const index = bisectDate(data, x0, 1);
+        const d0 = data[index - 1];
+        const d1 = data[index];
         let d = d0;
         if (d1 && getDate(d1)) {
           d =
@@ -106,7 +110,7 @@ export default withTooltip<AreaProps, TooltipData>(
           tooltipTop: stockValueScale(getStockValue(d)),
         });
       },
-      [showTooltip, stockValueScale, dateScale]
+      [dateScale, data, showTooltip, stockValueScale]
     );
 
     return (
@@ -118,7 +122,7 @@ export default withTooltip<AreaProps, TooltipData>(
             width={width}
             height={height}
             fill="url(#area-background-gradient)"
-            rx={14}
+            rx={10}
           />
           <LinearGradient
             id="area-background-gradient"
@@ -150,7 +154,7 @@ export default withTooltip<AreaProps, TooltipData>(
             pointerEvents="none"
           />
           <AreaClosed<AppleStock>
-            data={stock}
+            data={data}
             x={(d) => dateScale(getDate(d)) ?? 0}
             y={(d) => stockValueScale(getStockValue(d)) ?? 0}
             yScale={stockValueScale}
@@ -165,7 +169,7 @@ export default withTooltip<AreaProps, TooltipData>(
             width={innerWidth}
             height={innerHeight}
             fill="transparent"
-            rx={14}
+            rx={10}
             onTouchStart={handleTooltip}
             onTouchMove={handleTooltip}
             onMouseMove={handleTooltip}

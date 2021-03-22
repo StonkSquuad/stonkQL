@@ -7,9 +7,12 @@ import { Button, Input, Tooltip } from 'antd';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { ReactComponent as RocketLogo } from '../../../assets/rocket-logo.svg';
-import styles from './index.module.scss';
+import { useCtx } from '../../context';
+import styles from './login.module.scss';
 
 export const Login = () => {
+  const { updateContext } = useCtx();
+
   return (
     <div className={styles.login}>
       <div className={styles.content}>
@@ -40,7 +43,13 @@ export const Login = () => {
         </div>
         <div>
           <NavLink to="/">
-            <Button type="primary" block>
+            <Button
+              type="primary"
+              block
+              onClick={() => {
+                updateContext({ isLoggedIn: true });
+              }}
+            >
               Enter
             </Button>
           </NavLink>
