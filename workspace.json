@@ -28,7 +28,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/stonk-ql",
             "index": "apps/stonk-ql/src/index.html",
@@ -39,7 +41,9 @@
               "apps/stonk-ql/src/favicon.ico",
               "apps/stonk-ql/src/assets"
             ],
-            "styles": ["apps/stonk-ql/src/styles.scss"],
+            "styles": [
+              "apps/stonk-ql/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -71,7 +75,8 @@
         "serve": {
           "executor": "@nrwl/web:dev-server",
           "options": {
-            "buildTarget": "stonk-ql:build"
+            "buildTarget": "stonk-ql:build",
+            "proxyConfig": "apps/stonk-ql/proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -82,12 +87,16 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/stonk-ql/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/stonk-ql/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/stonk-ql"],
+          "outputs": [
+            "coverage/apps/stonk-ql"
+          ],
           "options": {
             "jestConfig": "apps/stonk-ql/jest.config.js",
             "passWithNoTests": true
@@ -116,7 +125,68 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/stonk-ql-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/stonk-ql-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    },
+    "stonk-ql-server": {
+      "root": "apps/stonk-ql-server",
+      "sourceRoot": "apps/stonk-ql-server/src",
+      "projectType": "application",
+      "prefix": "stonk-ql-server",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/node:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/stonk-ql-server",
+            "main": "apps/stonk-ql-server/src/main.ts",
+            "tsConfig": "apps/stonk-ql-server/tsconfig.app.json",
+            "assets": [
+              "apps/stonk-ql-server/src/assets"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/stonk-ql-server/src/environments/environment.ts",
+                  "with": "apps/stonk-ql-server/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "stonk-ql-server:build"
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/stonk-ql-server/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/stonk-ql-server"
+          ],
+          "options": {
+            "jestConfig": "apps/stonk-ql-server/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }
