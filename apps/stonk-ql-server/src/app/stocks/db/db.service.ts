@@ -1,24 +1,19 @@
-import { Injectable } from "@nestjs/common";
-const { MongoClient } = require("mongodb");
+import { Inject, Injectable } from "@nestjs/common";
+import { MongoClient } from "mongodb";
+import { MONGO_CLIENT } from "../constants";
 
 @Injectable()
 export class DbService {
-  static getUserInfo(userName: string): any {
-       return new Promise( ( resolve ) => {
-       const client = new MongoClient(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
-       client.connect(err => {
-         const database = client.db('stock-database');
-         const userCollection = database.collection('stockusers');
 
-         const query = { username: userName };
+  constructor(@Inject(MONGO_CLIENT) private readonly mongoClient: Promise<MongoClient>) {}
 
-         const queryResult = userCollection.findOne( query, {} );
+  async getUserInfo(userName: string): Promise<any> {
+    const client = await this.mongoClient;
+    const database = client.db('stock-database');
+    const userCollection = database.collection('stockusers');
 
-         queryResult.then( ( userData ) => {
-           resolve( userData );
-           client.close();
-         });
-       });
-     });
+    const query = { username: userName };
+
+    return userCollection.findOne( query, {} );
   }
 }
