@@ -1,5 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import * as moment from 'moment';
+import { DbService } from './db/db.service';
+import { User } from './models/user.model';
 //import * as mongodb from 'mongodb';
 
 interface HistoricalStockOptions {
@@ -56,19 +58,8 @@ export class StockService {
     });
   }
 
-  /*async getUserInfo( userName: string ): Promise<any> {
-    return new Promise( ( resolve ) => {
-        const MongoClient = mongodb.MongoClient;
-        const client = new MongoClient(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
-        client.connect(err => {
-        const collection = client.db("stock-database").collection("stockusers");
-        collection.find( { username: userName } ).then( ( result ) => {
-            console.log( result );
-            resolve( {} );
-        });
-        // perform actions on the collection object
-        client.close();
-        });
-    });
-  }*/
+  async getUserInfo( userName: string ): Promise<User> {
+      console.log( 'Getting user for username: ', userName );
+    return DbService.getUserInfo( userName );
+  }
 }

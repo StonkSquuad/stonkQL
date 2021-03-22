@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { StockModule } from './stocks/stock.module';
-
-
-
 @Module({
   imports: [
     GraphQLModule.forRoot({

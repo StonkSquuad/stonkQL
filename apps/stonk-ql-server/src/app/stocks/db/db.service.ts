@@ -1,14 +1,24 @@
-//export { MongoClient } from 'mongodb';
+import { Injectable } from "@nestjs/common";
+const { MongoClient } = require("mongodb");
 
-/**
+@Injectable()
+export class DbService {
+  static getUserInfo(userName: string): any {
+       return new Promise( ( resolve ) => {
+       const client = new MongoClient(process.env.MONGO_CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true });
+       client.connect(err => {
+         const database = client.db('stock-database');
+         const userCollection = database.collection('stockusers');
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://stonksquad:<password>@cluster0.0qztl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
-});
+         const query = { username: userName };
 
-*/
+         const queryResult = userCollection.findOne( query, {} );
+
+         queryResult.then( ( userData ) => {
+           resolve( userData );
+           client.close();
+         });
+       });
+     });
+  }
+}

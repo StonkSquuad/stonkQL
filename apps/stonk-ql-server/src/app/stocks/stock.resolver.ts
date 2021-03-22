@@ -18,10 +18,10 @@ export class StockResolver {
     return this.stockService.getStock(stockTicker);
   }
 
-  /*@Query(returns => User, { name: 'user' })
+  @Query(returns => User, { name: 'user' })
   async getUserInfo(@Args('username') username: string) {
     return this.stockService.getUserInfo(username);
-  }*/
+  }
 
   @Query(returns => [StockHistoricalData], { name: 'stockHistorical' })
   async getStockHistorical(
