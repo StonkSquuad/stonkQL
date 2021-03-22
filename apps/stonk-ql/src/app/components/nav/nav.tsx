@@ -30,6 +30,12 @@ export const Nav = () => {
     setSearchValue(event.target.value);
   };
 
+  const closeSearch = () => {
+    toggleSearchOpen(!searchOpen);
+    toggleResultsOpen(false);
+    setSearchValue('');
+  };
+
   return (
     <div className={styles.nav}>
       <div className={styles.logo}>
@@ -45,9 +51,7 @@ export const Nav = () => {
         ) : (
           <CloseOutlined
             onClick={() => {
-              toggleSearchOpen(!searchOpen);
-              toggleResultsOpen(false);
-              setSearchValue('');
+              closeSearch();
             }}
           />
         )}
@@ -72,7 +76,12 @@ export const Nav = () => {
             <ul>
               {data &&
                 data.stock.map((result, key) => (
-                  <li key={key}>
+                  <li
+                    key={key}
+                    onClick={() => {
+                      closeSearch();
+                    }}
+                  >
                     <NavLink to={`/stonk?${result.ticker}`}>
                       <span>{result.ticker}</span>
                       <div>{result.name}</div>

@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   background: #262731;
-  padding: 10px 30px;
+  padding: 10px 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.205);
   .logo svg {
     height: 30px;
@@ -21,6 +21,8 @@
       }
     }
     .searchResults {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.205);
+      z-index: 1;
       position: absolute;
       top: 76px;
       right: 20px;

@@ -1,3 +1,4 @@
+import appleStock from '@visx/mock-data/lib/mocks/appleStock';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Typography } from 'antd';
 import React from 'react';
@@ -9,14 +10,12 @@ const { Title } = Typography;
 export const Home = () => {
   return (
     <div className={styles.home}>
-      <div className={styles.areaChart}>
-        <Title>Investments</Title>
-        <ParentSize>
-          {({ width, height }) => (
-            <AreaChart data={undefined} width={width} height={height} />
-          )}
-        </ParentSize>
-      </div>
+      <Title>Investments</Title>
+      <ParentSize>
+        {({ width, height }) => (
+          <AreaChart data={appleStock} width={width} height={height} />
+        )}
+      </ParentSize>
     </div>
   );
 };
