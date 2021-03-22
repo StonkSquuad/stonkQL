@@ -2,6 +2,7 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { StockHistoricalData } from './models/stock-historical-data.model';
 import { Stock } from './models/stock.model';
+import { User } from './models/user.model';
 import { StockService } from './stock.service';
 
 
@@ -16,6 +17,11 @@ export class StockResolver {
   async getStockPrice(@Args('stockTicker') stockTicker: string) {
     return this.stockService.getStock(stockTicker);
   }
+
+  /*@Query(returns => User, { name: 'user' })
+  async getUserInfo(@Args('username') username: string) {
+    return this.stockService.getUserInfo(username);
+  }*/
 
   @Query(returns => [StockHistoricalData], { name: 'stockHistorical' })
   async getStockHistorical(
