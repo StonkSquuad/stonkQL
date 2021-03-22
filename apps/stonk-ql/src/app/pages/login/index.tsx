@@ -3,30 +3,26 @@ import {
   KeyOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Input, Tooltip, Typography } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { ReactComponent as RocketLogo } from '../../../assets/rocket-logo.svg';
 import styles from './index.module.scss';
-
-const { Title } = Typography;
 
 export const Login = () => {
   return (
     <div className={styles.login}>
       <div className={styles.content}>
-        <Title level={2}>
-          StonkQL{' '}
-          <span role="img" aria-label="rocket">
-            🚀
-          </span>
-        </Title>
+        <div className={styles.logo}>
+          <RocketLogo />
+        </div>
         <div>
           <Input
             placeholder="Enter your username"
             prefix={<UserOutlined className="site-form-item-icon" />}
             suffix={
               <Tooltip title="Extra information">
-                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                <InfoCircleOutlined style={{ color: 'rgba(255,255,255,.1)' }} />
               </Tooltip>
             }
           />
@@ -37,7 +33,7 @@ export const Login = () => {
             prefix={<KeyOutlined className="site-form-item-icon" />}
             suffix={
               <Tooltip title="Extra information">
-                <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                <InfoCircleOutlined style={{ color: 'rgba(255,255,255,.1)' }} />
               </Tooltip>
             }
           />
