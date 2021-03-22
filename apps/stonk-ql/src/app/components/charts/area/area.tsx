@@ -18,25 +18,6 @@ import { timeFormat } from 'd3-time-format';
 import React, { useCallback, useMemo } from 'react';
 import styles from './area.module.scss';
 
-const DATE_OPTIONS = [
-  {
-    label: '1W',
-    value: 7,
-  },
-  {
-    label: '1M',
-    value: 30,
-  },
-  {
-    label: '3M',
-    value: 90,
-  },
-  {
-    label: '1Y',
-    value: 365,
-  },
-];
-
 type TooltipData = AppleStock;
 
 export const background = '#3b6978';
@@ -63,8 +44,6 @@ export type AreaProps = {
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
-  onDateChange?: (days: number) => void;
-  days: number;
 };
 
 export const AreaChart = withTooltip<AreaProps, TooltipData>(
@@ -78,8 +57,6 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
-    onDateChange,
-    days,
   }: AreaProps & WithTooltipProvidedProps<TooltipData>) => {
     if (data) {
       if (width < 10) return null;
@@ -135,10 +112,6 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
         },
         [dateScale, data, showTooltip, stockValueScale]
       );
-
-      const handleDateChange = (days) => {
-        onDateChange && onDateChange(days);
-      };
 
       return (
         <div className={styles.area}>
@@ -269,19 +242,6 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
               </Tooltip>
             </div>
           )}
-          <div className={styles.dates}>
-            {DATE_OPTIONS.map((option, key) => (
-              <div
-                className={days === option.value ? styles.active : null}
-                key={key}
-                onClick={() => {
-                  handleDateChange(option.value);
-                }}
-              >
-                {option.label}
-              </div>
-            ))}
-          </div>
         </div>
       );
     } else {

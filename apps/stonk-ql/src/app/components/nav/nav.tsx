@@ -39,7 +39,9 @@ export const Nav = () => {
   return (
     <div className={styles.nav}>
       <div className={styles.logo}>
-        <RocketLogo />
+        <NavLink to="/">
+          <RocketLogo />
+        </NavLink>
       </div>
       <div className={styles.search}>
         {!searchOpen ? (

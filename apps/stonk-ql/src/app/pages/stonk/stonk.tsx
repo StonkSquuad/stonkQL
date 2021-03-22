@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AreaChart from '../../components/charts/area/area';
 import { Loader } from '../../components/loader/loader';
+import { DATE_OPTIONS } from './date-options';
 import styles from './stonk.module.scss';
 
 const { Title } = Typography;
@@ -50,17 +51,36 @@ export const Stonk = () => {
           </div>
         )}
         {data && (
-          <ParentSize>
-            {({ width, height }) => (
-              <AreaChart
-                data={data.stockHistorical}
-                width={width}
-                height={height}
-                onDateChange={dateChange}
-                days={startDay}
-              />
-            )}
-          </ParentSize>
+          <>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  data={data.stockHistorical}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+            <div className={styles.actions}>
+              <div className={styles.dates}>
+                {DATE_OPTIONS.map((option, key) => (
+                  <div
+                    className={startDay === option.value ? styles.active : null}
+                    key={key}
+                    onClick={() => {
+                      dateChange(option.value);
+                    }}
+                  >
+                    {option.label}
+                  </div>
+                ))}
+              </div>
+              <div className={styles.trade}>
+                <div className={styles.red}>Buy</div>
+                <div className={styles.green}>Sell</div>
+              </div>
+            </div>
+          </>
         )}
       </div>
     );
