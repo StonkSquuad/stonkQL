@@ -3,8 +3,9 @@
   height: 500px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.205);
   svg {
-    border-radius: 10px;
-    overflow: hidden;
+    tspan {
+      fill: white;
+    }
   }
   .dates {
     background: white;

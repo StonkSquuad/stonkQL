@@ -1,3 +1,4 @@
+import { AxisLeft } from '@visx/axis';
 import { curveMonotoneX } from '@visx/curve';
 import { localPoint } from '@visx/event';
 import { LinearGradient } from '@visx/gradient';
@@ -71,7 +72,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
     data,
     width,
     height,
-    margin = { top: 0, right: 0, bottom: 0, left: 0 },
+    margin = { top: 0, right: 0, bottom: 0, left: 40 },
     showTooltip,
     hideTooltip,
     tooltipData,
@@ -200,6 +201,16 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
               onTouchMove={handleTooltip}
               onMouseMove={handleTooltip}
               onMouseLeave={() => hideTooltip()}
+            />
+            <AxisLeft
+              scale={stockValueScale}
+              top={10}
+              left={margin.left}
+              stroke="#fff"
+              tickStroke="#fff"
+              hideZero={true}
+              strokeWidth={0}
+              hideTicks
             />
             {tooltipData && (
               <g>

@@ -31,7 +31,8 @@
       overflow-y: auto;
       background: white;
       border-radius: 10px;
-      display: none;
+      transform-origin: 50% 0%;
+      transform: perspective(350px) rotateX(-90deg);
       .loader {
         padding: 50px;
         display: flex;
@@ -68,7 +69,8 @@
         }
       }
       &.open {
-        display: block;
+        transform: perspective(350px) rotateX(0deg);
+        transition: 0.2s linear 0s;
       }
     }
   }
