@@ -12,9 +12,6 @@ export class StockResolver {
 
   @Query(returns => Stock, { name: 'stock' })
   async getStockPrice(@Args('stockTicker') stockTicker: string) {
-    console.log( 'Finding this name: ', stockTicker );
-    const result = await this.stockService.getStock(stockTicker);
-    console.log( result );
-    return result;
+    return await this.stockService.getStock(stockTicker);
   }
 }

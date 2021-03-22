@@ -34,6 +34,7 @@
     "@nestjs/platform-express": "^7.0.0",
     "antd": "^4.14.1",
     "apollo-server-express": "^2.21.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",
     "graphql": "^15.5.0",
