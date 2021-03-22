@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { FooResolver } from './app.service';
+import { StockResolver } from './app.service';
+import { StockModule } from './stocks/stock.module';
 
 
 
@@ -10,9 +11,11 @@ import { FooResolver } from './app.service';
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       playground: true,
-      debug: true
+      debug: true,
+      include: []
     }),
+    StockModule
   ],
-  providers: [FooResolver],
+  providers: [StockResolver],
 })
 export class AppModule {}

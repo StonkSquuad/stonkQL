@@ -2,19 +2,19 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
-export class Recipe {
+export class Stock {
   @Field(type => ID)
   id: string;
 
   @Field()
-  title: string;
+  name: string;
 
   @Field({ nullable: true })
   description?: string;
 
-  @Field()
-  creationDate: Date;
+  @Field({ nullable: true })
+  price: number;
 
-  @Field(type => [String])
-  ingredients: string[];
+  @Field({ nullable: true })
+  companyName: string;
 }

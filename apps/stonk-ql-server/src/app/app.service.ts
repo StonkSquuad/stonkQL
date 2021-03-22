@@ -1,11 +1,19 @@
 
-import { Query, Resolver } from '@nestjs/graphql';
+import { Post } from '@nestjs/common';
+import { Args, Int, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Stock } from './stocks/models/stock.model';
+import { StockService } from './stocks/stock.service';
 
 @Resolver()
-export class FooResolver {
+export class StockResolver {
 
-  @Query(() => String)
-  sayHello(): Record<string, string> {
-    return 'Hello World';
+  constructor(
+    private stockService: StockService
+  ) {}
+
+  @Query(returns => Stock, { name: 'stock' })
+  async getStockPrice(@Args('companyName') companyName: string) {
+    console.log( 'Finding this name: ', companyName );
+    return this.stockService.getStock(companyName);
   }
 }
