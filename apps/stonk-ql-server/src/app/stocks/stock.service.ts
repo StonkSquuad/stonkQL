@@ -14,6 +14,21 @@ interface HistoricalStockOptions {
 export class StockService {
   private static readonly BASE_URL = `https://api.polygon.io/v2`;
 
+  private API_KEYS = [
+    process.env.POLYGON_API_KEY1,
+    process.env.POLYGON_API_KEY2,
+    process.env.POLYGON_API_KEY3,
+    process.env.POLYGON_API_KEY4,
+    process.env.POLYGON_API_KEY5,
+    process.env.POLYGON_API_KEY6
+];
+    private KEY_IDX = 0;
+
+    private getApiKey(){
+        this.KEY_IDX++; 
+        return this.API_KEYS[ this.KEY_IDX % this.API_KEYS.length ];
+}
+
   constructor(
     private readonly httpService: HttpService,
     private readonly dbService: DbService
@@ -26,7 +41,7 @@ export class StockService {
         params: {
           perpage: 100,
           page: 1,
-          apiKey: process.env.POLYGON_API_KEY,
+          apiKey: this.getApiKey(),
           search: ticker,
           sort: 'ticker',
         },
@@ -54,7 +69,7 @@ export class StockService {
             unadjusted: true,
             sort: 'asc',
             limit: 120,
-            apiKey: process.env.POLYGON_API_KEY,
+            apiKey: this.getApiKey(),
           },
         }
       )
@@ -72,7 +87,15 @@ export class StockService {
   }
 
   async getUserInfo(userName: string): Promise<User> {
-    console.log('Getting user for username: ', userName);
     return this.dbService.getUserInfo(userName);
   }
+
+  /*async buyStock(stockTicker: string, quantity: number) {
+    // get current value of stock
+    const currentStockPrice = await this.getStockHistorical({ stockTicker, startDate: moment().format('YYYY-MM-DD'), endDate: moment().format('YYYY-MM-DD')})
+    // check to see if the user has enough money
+    // if no, throw you are poor exception
+    // if yes, update the stocks array
+    
+  }*/
 }
