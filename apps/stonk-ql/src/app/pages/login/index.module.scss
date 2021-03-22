@@ -1,0 +1,23 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  .content {
+    background: rgb(41, 41, 41);
+    padding: 50px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.205);
+    border-radius: 3px;
+    h2 {
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+    div:not(:last-child) {
+      margin-bottom: 20px;
+    }
+    button {
+      margin-top: 10px;
+    }
+  }
+}
