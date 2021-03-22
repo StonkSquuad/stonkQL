@@ -10,12 +10,98 @@ const { Title } = Typography;
 export const Home = () => {
   return (
     <div className={styles.home}>
-      <Title>Investments</Title>
+      <div className={styles.title}>
+        <Title>Investing</Title>
+        <Title>$1,324.56</Title>
+      </div>
       <ParentSize>
         {({ width, height }) => (
-          <AreaChart data={appleStock} width={width} height={height} />
+          <AreaChart axis data={appleStock} width={width} height={height} />
         )}
       </ParentSize>
+      <div className={styles.portfolio}>
+        <Title level={2}>Portfolio</Title>
+        <div className={styles.assetList}>
+          <div>
+            <span>TSLA</span>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  showTooltip={false}
+                  data={appleStock}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+          </div>
+          <div>
+            <span>APPL</span>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  showTooltip={false}
+                  data={appleStock}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+          </div>
+          <div>
+            <span>DT</span>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  showTooltip={false}
+                  data={appleStock}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+          </div>
+          <div>
+            <span>GME</span>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  showTooltip={false}
+                  data={appleStock}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+          </div>
+          <div>
+            <span>AMC</span>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  showTooltip={false}
+                  data={appleStock}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+          </div>
+          <div>
+            <span>FOO</span>
+            <ParentSize>
+              {({ width, height }) => (
+                <AreaChart
+                  showTooltip={false}
+                  data={appleStock}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

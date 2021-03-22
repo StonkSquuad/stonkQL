@@ -1,3 +1,45 @@
 .home {
   padding: 50px;
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    h1 {
+      margin: 0;
+    }
+  }
+  .portfolio {
+    margin-top: 40px;
+    .assetList {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+
+      div {
+        position: relative;
+        width: 200px;
+        height: 100px;
+        border-radius: 10px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+
+        span {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          color: white;
+          z-index: 1;
+          font-weight: 600;
+          transition: all 0.2s ease;
+        }
+        &:hover {
+          transform: scale(1.02);
+          span {
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
+  }
 }

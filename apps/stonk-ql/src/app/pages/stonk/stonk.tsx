@@ -58,6 +58,7 @@ export const Stonk = () => {
                   data={data.stockHistorical}
                   width={width}
                   height={height}
+                  axis
                 />
               )}
             </ParentSize>

@@ -40,10 +40,12 @@ const getStockValue = (d: AppleStock) => d.close;
 const bisectDate = bisector<AppleStock, Date>((d) => new Date(d.date)).left;
 
 export type AreaProps = {
-  data: any;
+  data: { close: number; date: string }[];
   width: number;
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
+  axis?: boolean;
+  showTooltip?: boolean;
 };
 
 export const AreaChart = withTooltip<AreaProps, TooltipData>(
@@ -57,9 +59,14 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
     tooltipData,
     tooltipTop = 0,
     tooltipLeft = 0,
+    axis,
   }: AreaProps & WithTooltipProvidedProps<TooltipData>) => {
     if (data) {
       if (width < 10) return null;
+
+      if (!axis) {
+        margin.left = 0;
+      }
 
       // bounds
       const innerWidth = width - margin.left - margin.right;
@@ -175,16 +182,18 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
               onMouseMove={handleTooltip}
               onMouseLeave={() => hideTooltip()}
             />
-            <AxisLeft
-              scale={stockValueScale}
-              top={10}
-              left={margin.left}
-              stroke="#fff"
-              tickStroke="#fff"
-              hideZero={true}
-              strokeWidth={0}
-              hideTicks
-            />
+            {axis && (
+              <AxisLeft
+                scale={stockValueScale}
+                top={10}
+                left={margin.left}
+                stroke="#fff"
+                tickStroke="#fff"
+                hideZero={true}
+                strokeWidth={0}
+                hideTicks
+              />
+            )}
             {tooltipData && (
               <g>
                 <Line
@@ -226,7 +235,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
                 left={tooltipLeft + 12}
                 style={tooltipStyles}
               >
-                {`$${getStockValue(tooltipData)}`}
+                {`${getStockValue(tooltipData)}`}
               </TooltipWithBounds>
               <Tooltip
                 top={innerHeight + margin.top - 14}
