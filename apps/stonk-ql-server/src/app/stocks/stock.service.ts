@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Stock } from './interfaces/stock.interface';
 import axios from 'axios';
-
 @Injectable()
 export class StockService {
   private BASE_URL = `https://api.polygon.io/v2`;
