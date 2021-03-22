@@ -43,7 +43,12 @@ export const Stonk = () => {
   } else {
     return (
       <div className={styles.stonk}>
-        {data && <Title>{data.stock[0].name}</Title>}
+        {data && (
+          <div className={styles.title}>
+            <Title>{data.stock[0].name}</Title>
+            <Title>${data.stockHistorical.slice(-1).pop().close}</Title>
+          </div>
+        )}
         {data && (
           <ParentSize>
             {({ width, height }) => (
