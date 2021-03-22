@@ -15,6 +15,7 @@ export class StockService {
   private static readonly BASE_URL = `https://api.polygon.io/v2`;
 
   private API_KEYS = [
+    process.env.POLYGON_API_KEY0,
     process.env.POLYGON_API_KEY1,
     process.env.POLYGON_API_KEY2,
     process.env.POLYGON_API_KEY3,
