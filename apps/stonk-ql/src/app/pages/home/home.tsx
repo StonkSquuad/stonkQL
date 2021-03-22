@@ -13,7 +13,12 @@ export const Home = () => {
       <Title>Investments</Title>
       <ParentSize>
         {({ width, height }) => (
-          <AreaChart data={appleStock} width={width} height={height} />
+          <AreaChart
+            data={appleStock}
+            width={width}
+            height={height}
+            days={30}
+          />
         )}
       </ParentSize>
     </div>

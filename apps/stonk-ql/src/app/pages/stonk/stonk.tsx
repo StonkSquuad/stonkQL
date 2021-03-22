@@ -1,7 +1,8 @@
 import { gql, useQuery } from '@apollo/client';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Typography } from 'antd';
-import React from 'react';
+import moment from 'moment';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AreaChart from '../../components/charts/area/area';
 import { Loader } from '../../components/loader/loader';
@@ -12,13 +13,21 @@ const { Title } = Typography;
 export const Stonk = () => {
   const { search } = useLocation();
   const ticker = search.split('?')[1];
+  const [startDay, setStartDay] = useState(30);
+
+  const dateChange = (days) => {
+    setStartDay(days);
+  };
+
+  const endDate = moment().format('YYYY-MM-DD');
+  const startDate = moment().subtract(startDay, 'd').format('YYYY-MM-DD');
 
   const { loading, error, data } = useQuery(gql`
     {
       stockHistorical(
         stockTicker: "${ticker}"
-        startDate: "2021-01-02"
-        endDate: "2021-03-01"
+        startDate: "${startDate}"
+        endDate: "${endDate}"
       ) {
         date
         close
@@ -42,6 +51,8 @@ export const Stonk = () => {
                 data={data.stockHistorical}
                 width={width}
                 height={height}
+                onDateChange={dateChange}
+                days={startDay}
               />
             )}
           </ParentSize>

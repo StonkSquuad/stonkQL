@@ -44,9 +44,12 @@
         margin: 0;
         li {
           padding: 10px 30px;
-
           &:nth-child(even) {
             background: rgb(240, 240, 240);
+          }
+
+          &:hover {
+            background: rgb(207, 207, 207);
           }
           a {
             display: flex;
