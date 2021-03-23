@@ -60,6 +60,22 @@ export class StockService {
       });
   }
 
+  async getOwnedStock(userName: string): Promise<any> {
+    return this.dbService.getOwnedStock( userName );
+  }
+
+  async getStockPriceVantage(ticker: string): Promise<any> {
+    return this.httpService
+      .get(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`)
+      .toPromise()
+      .then((response) => {
+        return response.data[ 'Global Quote'][ '05. price' ];
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   async getStockHistorical(
     historicalStockOptions: HistoricalStockOptions
   ): Promise<any> {
@@ -106,33 +122,71 @@ export class StockService {
       userName
     } = purchaseOptions;
     // get current value of stock
-    const currentStockPrice = 45.09;//await this.getStockHistorical({ stockTicker, startDate: moment().format('YYYY-MM-DD'), endDate: moment().format('YYYY-MM-DD')});
+    const currentStockPrice = await this.getStockPriceVantage( purchaseOptions.stockTicker );
     const {
       name,
       username,
       userId,
-      stocksCumulativeValue,
       stocksOwned,
       cashValue
     } = await this.dbService.getUserInfo(userName);
     // check to see if the user has enough money
-    console.log( 'Stock Price: ', currentStockPrice );
-    console.log( 'Quantity: ', quantity );
-    console.log( 'Users Cash Value: ', cashValue );
-
     if( currentStockPrice*quantity <= cashValue ) {
       // Push new transaction
-      await this.dbService.runTransaction( { 
-        quantity, timestamp: moment().toISOString(), authorizingUserId: userId,purchasePrice:currentStockPrice,tickerSymbol:stockTicker }
-        );
+      await this.dbService.runPurchaseTransaction( { 
+        quantity, 
+        timestamp: moment().toISOString(), 
+        authorizingUserId: userId,
+        purchasePrice:currentStockPrice,
+        tickerSymbol:stockTicker 
+      });
 
+      return this.dbService.getAccountEvaluation( username, stockTicker, currentStockPrice );
       // Update user file
     }
     else {
       throw new Error( 'User does not have sufficient funds' );
     }
     // if no, throw you are poor exception
-    // if yes, update the stocks array
-    
+    // if yes, update the stocks array 
+  }
+
+  async sellStock(purchaseOptions: StockPurchase) {
+    const {
+      stockTicker,
+      quantity,
+      userName
+    } = purchaseOptions;
+    // get current value of stock
+    const currentStockPrice = await this.getStockPriceVantage( stockTicker );
+    const {
+      name,
+      username,
+      userId,
+      stocksOwned,
+      cashValue
+    } = await this.dbService.getUserInfo(userName);
+    // check to see if the user has enough money
+
+    const stocksOwnedJson = JSON.parse( stocksOwned ).find( el => el.ticker === stockTicker );
+    if( stocksOwnedJson && stocksOwnedJson.quantity >= quantity ) {
+      // Push new transaction
+      return this.dbService.runSaleTransaction( { 
+        quantity, 
+        timestamp: moment().toISOString(), 
+        authorizingUserId: userId,
+        purchasePrice:currentStockPrice,
+        tickerSymbol:stockTicker 
+      }).then( () => {
+        return this.dbService.getAccountEvaluation( username, stockTicker, currentStockPrice );
+      });
+
+      // Update user file
+    }
+    else {
+      throw new Error( 'User does not have enough stock holdings to sell.' );
+    }
+    // if no, throw you are poor exception
+    // if yes, update the stocks array 
   }
 }

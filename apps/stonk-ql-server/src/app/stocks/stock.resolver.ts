@@ -45,5 +45,27 @@ export class StockResolver {
     });
   }
 
+  @Query((returns) => Transaction, { name: 'sellStock' })
+  async sellStock(
+    @Args('stockTicker') stockTicker: string,
+    @Args('quantity') quantity: number,
+    @Args('userName') userName: string,
+  ) {
+    return this.stockService.sellStock({
+      stockTicker,
+      quantity,
+      userName
+    });
+  }
+
+  @Query((returns) => [Stock], { name: 'getOwnedStocks' })
+  async getOwnedStock(
+    @Args('userName') userName: string,
+  ) {
+    return this.stockService.getOwnedStock(
+      userName
+    );
+  }
+
 
 }

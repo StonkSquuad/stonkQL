@@ -13,10 +13,7 @@ export class User {
 
   @Field({ nullable: true })
   stocksOwned: string;
-
-  @Field({ nullable: true })
-  stocksCumulativeValue: number;
-
+  
   @Field({ nullable: true })
   userId: number;
 }

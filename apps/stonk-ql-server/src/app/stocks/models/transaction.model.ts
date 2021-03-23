@@ -4,11 +4,14 @@ import { Field, ObjectType } from '@nestjs/graphql';
 @ObjectType()
 export class Transaction {
   @Field({ nullable: true })
-  tickerSymbol: string;
+  ticker: string;
 
   @Field({ nullable: true })
-  quantity: number;
+  totalStockValue: number;
 
   @Field({ nullable: true })
-  transactionResult: boolean;
+  totalCashValue: number;
+  
+  @Field({ nullable: true })
+  currentPrice: number;
 }
