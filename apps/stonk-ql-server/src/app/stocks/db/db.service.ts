@@ -39,10 +39,13 @@ export class DbService {
     const transactionsCollection = database.collection('transactions');
     const userCollection = database.collection('stockUsers');
 
+    console.log('AuthId: ', authorizingUserId );
+
     const userInformation = await userCollection.find( {
       userId: authorizingUserId
     } ).toArray(function(err, result) {
       if (err) throw err;
+      console.log( 'RESULT: ', result );
       return result;
     });
 

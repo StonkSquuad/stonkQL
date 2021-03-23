@@ -9,5 +9,5 @@ export class StockHistoricalData {
   close: number;
 
   @Field(type => String)
-  id: string;
+  ticker: string;
 }

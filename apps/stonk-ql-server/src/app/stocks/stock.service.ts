@@ -85,7 +85,7 @@ export class StockService {
         return response.data.results.map((result) => ({
           date: moment(result.t).toISOString(),
           close: result.c,
-          id: stockTicker
+          ticker: stockTicker
         }))
         }
       )
@@ -106,7 +106,7 @@ export class StockService {
       userName
     } = purchaseOptions;
     // get current value of stock
-    const currentStockPrice = await this.getStockHistorical({ stockTicker, startDate: moment().format('YYYY-MM-DD'), endDate: moment().format('YYYY-MM-DD')});
+    const currentStockPrice = 45.09;//await this.getStockHistorical({ stockTicker, startDate: moment().format('YYYY-MM-DD'), endDate: moment().format('YYYY-MM-DD')});
     const {
       name,
       username,
