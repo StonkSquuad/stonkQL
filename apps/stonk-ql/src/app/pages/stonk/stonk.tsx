@@ -15,14 +15,8 @@ export const Stonk = () => {
   const { search } = useLocation();
   const ticker = search.split('?')[1];
   const [startDay, setStartDay] = useState(30);
-
-  const dateChange = (days) => {
-    setStartDay(days);
-  };
-
   const endDate = moment().format('YYYY-MM-DD');
   const startDate = moment().subtract(startDay, 'd').format('YYYY-MM-DD');
-
   const { loading, error, data } = useQuery(gql`
     {
       stockHistorical(
@@ -32,12 +26,17 @@ export const Stonk = () => {
       ) {
         date
         close
+        ticker
       }
       stock(stockTicker: "${ticker}") {
         name
       }
     }
   `);
+
+  const dateChange = (days) => {
+    setStartDay(days);
+  };
 
   if (loading) {
     return <Loader />;
@@ -54,12 +53,14 @@ export const Stonk = () => {
           <>
             <ParentSize>
               {({ width, height }) => (
-                <AreaChart
-                  data={data.stockHistorical}
-                  width={width}
-                  height={height}
-                  axis
-                />
+                <div className={styles.areaChart}>
+                  <AreaChart
+                    data={data.stockHistorical}
+                    width={width}
+                    height={height}
+                    axis
+                  />
+                </div>
               )}
             </ParentSize>
             <div className={styles.actions}>

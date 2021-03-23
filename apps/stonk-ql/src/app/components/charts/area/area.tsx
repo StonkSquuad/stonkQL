@@ -35,9 +35,9 @@ const tooltipStyles = {
 const formatDate = timeFormat("%b %d, '%y");
 
 // accessors
-const getDate = (d: AppleStock) => new Date(d.date);
-const getStockValue = (d: AppleStock) => d.close;
-const bisectDate = bisector<AppleStock, Date>((d) => new Date(d.date)).left;
+const getDate = (d) => new Date(d.date);
+const getStockValue = (d) => d.close;
+const bisectDate = bisector<Date>((d) => new Date(d.date)).left;
 
 export type AreaProps = {
   data: { close: number; date: string }[];
@@ -45,7 +45,7 @@ export type AreaProps = {
   height: number;
   margin?: { top: number; right: number; bottom: number; left: number };
   axis?: boolean;
-  showTooltip?: boolean;
+  tooltipVisible?: boolean;
 };
 
 export const AreaChart = withTooltip<AreaProps, TooltipData>(
@@ -60,6 +60,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
     tooltipTop = 0,
     tooltipLeft = 0,
     axis,
+    tooltipVisible,
   }: AreaProps & WithTooltipProvidedProps<TooltipData>) => {
     if (data) {
       if (width < 10) return null;
@@ -160,7 +161,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
               strokeOpacity={0.2}
               pointerEvents="none"
             />
-            <AreaClosed<AppleStock>
+            <AreaClosed
               data={data}
               x={(d) => dateScale(getDate(d)) ?? 0}
               y={(d) => stockValueScale(getStockValue(d)) ?? 0}
@@ -194,7 +195,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
                 hideTicks
               />
             )}
-            {tooltipData && (
+            {tooltipData && tooltipVisible && (
               <g>
                 <Line
                   from={{ x: tooltipLeft, y: margin.top }}
@@ -227,7 +228,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
               </g>
             )}
           </svg>
-          {tooltipData && (
+          {tooltipData && tooltipVisible && (
             <div>
               <TooltipWithBounds
                 key={Math.random()}

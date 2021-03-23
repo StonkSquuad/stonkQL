@@ -2,10 +2,33 @@ import appleStock from '@visx/mock-data/lib/mocks/appleStock';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Typography } from 'antd';
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import AreaChart from '../../components/charts/area/area';
+import PortfolioTile from '../../components/portfolio-tile/portfolio-tile';
 import styles from './home.module.scss';
 
 const { Title } = Typography;
+
+const ASSETS = [
+  {
+    ticker: 'TSLA',
+  },
+  {
+    ticker: 'GME',
+  },
+  {
+    ticker: 'DT',
+  },
+  {
+    ticker: 'AAPL',
+  },
+  {
+    ticker: 'IBM',
+  },
+  {
+    ticker: 'AMC',
+  },
+];
 
 export const Home = () => {
   return (
@@ -16,90 +39,25 @@ export const Home = () => {
       </div>
       <ParentSize>
         {({ width, height }) => (
-          <AreaChart axis data={appleStock} width={width} height={height} />
+          <div className={styles.areaChart}>
+            <AreaChart
+              axis
+              data={appleStock}
+              width={width}
+              height={height}
+              tooltipVisible
+            />
+          </div>
         )}
       </ParentSize>
       <div className={styles.portfolio}>
         <Title level={2}>Portfolio</Title>
         <div className={styles.assetList}>
-          <div>
-            <span>TSLA</span>
-            <ParentSize>
-              {({ width, height }) => (
-                <AreaChart
-                  showTooltip={false}
-                  data={appleStock}
-                  width={width}
-                  height={height}
-                />
-              )}
-            </ParentSize>
-          </div>
-          <div>
-            <span>APPL</span>
-            <ParentSize>
-              {({ width, height }) => (
-                <AreaChart
-                  showTooltip={false}
-                  data={appleStock}
-                  width={width}
-                  height={height}
-                />
-              )}
-            </ParentSize>
-          </div>
-          <div>
-            <span>DT</span>
-            <ParentSize>
-              {({ width, height }) => (
-                <AreaChart
-                  showTooltip={false}
-                  data={appleStock}
-                  width={width}
-                  height={height}
-                />
-              )}
-            </ParentSize>
-          </div>
-          <div>
-            <span>GME</span>
-            <ParentSize>
-              {({ width, height }) => (
-                <AreaChart
-                  showTooltip={false}
-                  data={appleStock}
-                  width={width}
-                  height={height}
-                />
-              )}
-            </ParentSize>
-          </div>
-          <div>
-            <span>AMC</span>
-            <ParentSize>
-              {({ width, height }) => (
-                <AreaChart
-                  showTooltip={false}
-                  data={appleStock}
-                  width={width}
-                  height={height}
-                />
-              )}
-            </ParentSize>
-          </div>
-          <div>
-            <span>FOO</span>
-            <ParentSize>
-              {({ width, height }) => (
-                <AreaChart
-                  showTooltip={false}
-                  data={appleStock}
-                  width={width}
-                  height={height}
-                />
-              )}
-            </ParentSize>
-          </div>
+          {ASSETS.map((asset, key) => (
+            <NavLink to={`/stonk?${asset.ticker}`} key={key}>
+              <PortfolioTile ticker={asset.ticker} />
+            </NavLink>
+          ))}
         </div>
       </div>
     </div>
