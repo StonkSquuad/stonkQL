@@ -27,7 +27,6 @@
       padding: 0 20px;
       font-weight: 600;
       overflow: hidden;
-
       div {
         padding: 10px;
         cursor: pointer;
@@ -54,17 +53,21 @@
     }
     .trade {
       display: flex;
-      div {
+      > div {
+        position: relative;
         background: white;
         border-radius: 40px;
         color: white;
         display: flex;
         align-items: center;
-        padding: 10px 30px;
+
         margin-left: 10px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
+        span.label {
+          padding: 10px 30px;
+        }
         &.red {
           background: #791a1f;
           &:hover {
@@ -85,6 +88,12 @@
             background: #6f9412;
           }
         }
+      }
+      .dialog {
+        position: absolute;
+        top: -140px;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
   }

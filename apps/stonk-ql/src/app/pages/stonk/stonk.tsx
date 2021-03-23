@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Typography } from 'antd';
 import moment from 'moment';
@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import AreaChart from '../../components/charts/area/area';
 import { Loader } from '../../components/loader/loader';
+import TradeDialog from '../../components/trade-dialog/trade-dialog';
 import { DATE_OPTIONS } from './date-options';
 import styles from './stonk.module.scss';
 
@@ -17,6 +18,10 @@ export const Stonk = () => {
   const [startDay, setStartDay] = useState(30);
   const endDate = moment().format('YYYY-MM-DD');
   const startDate = moment().subtract(startDay, 'd').format('YYYY-MM-DD');
+  const [buyDialog, toggleBuyDialog] = useState(false);
+  const [buyAmount, setBuyAmount] = useState(1);
+  const [sellDialog, toggleSellDialog] = useState(false);
+  const [sellAmount, setSellAmount] = useState(1);
   const { loading, error, data } = useQuery(gql`
     {
       stockHistorical(
@@ -34,8 +39,40 @@ export const Stonk = () => {
     }
   `);
 
+  const [buyStonks] = useLazyQuery(gql`
+    {
+      buyStock(userName:"cmp11290",stockTicker:"${ticker}",quantity:${buyAmount}){
+        totalStockValue,
+        totalCashValue,
+        currentPrice,
+        ticker
+      }
+    }
+  `);
+  const [sellStonks] = useLazyQuery(gql`
+    {
+      sellStock(userName:"cmp11290",stockTicker:"${ticker}",quantity:${sellAmount}){
+        totalStockValue,
+        totalCashValue,
+        currentPrice,
+        ticker
+      }
+    }
+  `);
+
   const dateChange = (days) => {
     setStartDay(days);
+  };
+
+  const handleBuy = (shares) => {
+    toggleBuyDialog(false);
+    setBuyAmount(shares);
+    buyStonks();
+  };
+  const handleSell = (shares) => {
+    toggleSellDialog(false);
+    setSellAmount(shares);
+    sellStonks();
   };
 
   if (loading) {
@@ -79,8 +116,38 @@ export const Stonk = () => {
                 ))}
               </div>
               <div className={styles.trade}>
-                <div className={styles.red}>Buy</div>
-                <div className={styles.green}>Sell</div>
+                <div className={styles.red}>
+                  {buyDialog && (
+                    <div className={styles.dialog}>
+                      <TradeDialog onChange={handleBuy} />
+                    </div>
+                  )}
+                  <span
+                    className={styles.label}
+                    onClick={() => {
+                      toggleBuyDialog(!buyDialog);
+                      toggleSellDialog(false);
+                    }}
+                  >
+                    Buy
+                  </span>
+                </div>
+                <div className={styles.green}>
+                  {sellDialog && (
+                    <div className={styles.dialog}>
+                      <TradeDialog onChange={handleSell} />
+                    </div>
+                  )}
+                  <span
+                    className={styles.label}
+                    onClick={() => {
+                      toggleSellDialog(!sellDialog);
+                      toggleBuyDialog(false);
+                    }}
+                  >
+                    Sell
+                  </span>
+                </div>
               </div>
             </div>
           </>
