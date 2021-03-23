@@ -141,7 +141,8 @@ export class StockService {
         timestamp: moment().toISOString(), 
         authorizingUserId: userId,
         purchasePrice:currentStockPrice,
-        tickerSymbol:stockTicker 
+        tickerSymbol:stockTicker,
+        purchaseType: 'buy' 
       });
 
       return this.dbService.getAccountEvaluation( username, stockTicker, currentStockPrice );
@@ -179,7 +180,8 @@ export class StockService {
         timestamp: moment().toISOString(), 
         authorizingUserId: userId,
         purchasePrice:currentStockPrice,
-        tickerSymbol:stockTicker 
+        tickerSymbol:stockTicker,
+        purchaseType: 'sell' 
       }).then( () => {
         return this.dbService.getAccountEvaluation( username, stockTicker, currentStockPrice );
       });
