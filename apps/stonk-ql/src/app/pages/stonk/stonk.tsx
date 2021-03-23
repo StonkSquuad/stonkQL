@@ -59,6 +59,7 @@ export const Stonk = () => {
                     width={width}
                     height={height}
                     axis
+                    tooltipVisible
                   />
                 </div>
               )}

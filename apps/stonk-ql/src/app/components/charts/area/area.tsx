@@ -239,8 +239,8 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
                 {`${getStockValue(tooltipData)}`}
               </TooltipWithBounds>
               <Tooltip
-                top={innerHeight + margin.top - 14}
-                left={tooltipLeft}
+                top={innerHeight + margin.top - 40}
+                left={tooltipLeft - 10}
                 style={{
                   ...defaultStyles,
                   minWidth: 72,

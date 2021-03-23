@@ -18,6 +18,7 @@ export const PortfolioTile = memo(({ ticker }: PortfolioTileProps) => {
     ) {
       date
       close
+      ticker
     }
   }
 `);

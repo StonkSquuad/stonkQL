@@ -11,6 +11,8 @@
   }
   .areaChart {
     height: 500px;
+    overflow: hidden;
+    border-radius: 10px;
   }
   .actions {
     display: flex;
