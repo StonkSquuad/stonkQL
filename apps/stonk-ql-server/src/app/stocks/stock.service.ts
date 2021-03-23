@@ -5,7 +5,8 @@ import { User } from './models/user.model';
 //import * as mongodb from 'mongodb';
 
 interface HistoricalStockOptions {
-  stockTicker: string;
+  stockTicker?: string;
+  userName?: string;
   startDate: string;
   endDate: string;
 }
@@ -130,6 +131,8 @@ export class StockService {
       stocksOwned,
       cashValue
     } = await this.dbService.getUserInfo(userName);
+
+    console.log( name, username, userId, stocksOwned, cashValue );
     // check to see if the user has enough money
     if( currentStockPrice*quantity <= cashValue ) {
       // Push new transaction
@@ -188,5 +191,34 @@ export class StockService {
     }
     // if no, throw you are poor exception
     // if yes, update the stocks array 
+  }
+
+  async getTransactionHistory( historicalStockOptions: HistoricalStockOptions): Promise<any> {
+    const historicalData = await this.dbService.getHistoricalTransactionData(
+      historicalStockOptions
+    );
+
+    const timestampsObj = {};
+    const timestampCollection = [];
+    historicalData.forEach( ( data ) => {
+      const timestamp = data.timestamp;//.match( /[0-9]{4}\-[0-9]{2}\-[0-9]{2}/gi )[0];
+      if( !timestampsObj[ data.timestamp ] ) {
+        timestampCollection.push( data.timestamp );
+        timestampsObj[ data.timestamp ] = data.purchasePrice * data.quantity;
+      } else {
+        timestampsObj[ data.timestamp ] += data.purchasePrice * data.quantity;
+      }
+    });
+
+    timestampCollection.sort( ( a, b ) => {
+      return moment( a ).format() > moment( b ).format() ? 1 : -1;
+    });
+
+    return timestampCollection.map( ( timestamp ) => {
+      return {
+        date: timestamp,
+        close: timestampsObj[ timestamp ]
+      };
+    });
   }
 }

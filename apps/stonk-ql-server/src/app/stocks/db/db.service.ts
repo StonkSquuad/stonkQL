@@ -1,4 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
+import * as moment from "moment";
 import { MongoClient } from "mongodb";
 import { MONGO_CLIENT } from "../constants";
 
@@ -8,6 +9,13 @@ interface TransactionOptions {
   readonly authorizingUserId: number;
   readonly purchasePrice: number;
   readonly tickerSymbol: string;
+}
+
+interface HistoricalStockOptions {
+  stockTicker?: string;
+  userName?: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface UserEntry {
@@ -27,6 +35,8 @@ export class DbService {
     const database = client.db('stock-database');
     const userCollection = database.collection('stockusers');
 
+    console.log( userName );
+
     const query = { username: userName };
 
     return userCollection.findOne( query, {} );
@@ -42,7 +52,7 @@ export class DbService {
     const stocksOwnedJson = JSON.parse( stocksOwned ) || [];
 
     const {
-      quantity 
+      quantity
     } = stocksOwnedJson.find( el => el.ticker === currentTicker );
 
     return {
@@ -70,7 +80,7 @@ export class DbService {
         tickerSymbol,
       } = transactionOptions;
 
-      return userCollection.find({
+      userCollection.find({
         userId: authorizingUserId
       }).toArray(function (err, result) {
         const [user] = result;
@@ -80,7 +90,7 @@ export class DbService {
           cashValue
         } = user as UserEntry;
         // Insert transaction to transactions collection
-        return transactionsCollection.insertOne(transactionOptions, function(err, res) {
+        transactionsCollection.insertOne(transactionOptions, function(err, res) {
           if (err) throw err;
           // Update user collection stocks owned and such
           let stocksOwnedJson = JSON.parse( stocksOwned ) || [];
@@ -131,7 +141,7 @@ export class DbService {
 
     return new Promise( ( transactionComplete ) => {
 
-    return userCollection.find({
+    userCollection.find({
       userId: authorizingUserId
     }).toArray(function (err, result) {
       const [user] = result;
@@ -140,13 +150,18 @@ export class DbService {
         stocksOwned,
         cashValue
       } = user as UserEntry;
+
+      console.log( 'Stocks owned: ', stocksOwned );
       // Insert transaction to transactions collection
-      return transactionsCollection.insertOne(transactionOptions, function(err, res) {
+      transactionsCollection.insertOne(transactionOptions, function(err, res) {
         if (err) throw err;
         // Update user collection stocks owned and such
         let stocksOwnedJson = JSON.parse( stocksOwned ) || [];
         const prevOwnedStock = stocksOwnedJson.find( ( el ) => el.ticker === tickerSymbol);
-        const otherStock = stocksOwnedJson.filter( ( el ) => el.ticker !== tickerSymbol);
+        const otherStock = stocksOwnedJson.filter( ( el ) => el.ticker !== tickerSymbol) || [];
+
+        console.log( 'Stocks owned: ', prevOwnedStock );
+        console.log( 'Other stocks: ', otherStock );
 
          if( prevOwnedStock ) {      
            prevOwnedStock.quantity -= quantity;
@@ -166,10 +181,40 @@ export class DbService {
         },(err,res)=>{
           if(err)throw err;
           transactionComplete( res );
-          return res;
         });    
       });
     });
     });
   };
+
+
+  async getHistoricalTransactionData( options: HistoricalStockOptions ): Promise<any> {
+    const { userName, startDate, endDate } = options;
+
+    const client = await this.mongoClient;
+    const database = client.db('stock-database');
+
+    const transactionsCollection = database.collection('transactions');
+    const userCollection = database.collection('stockusers');
+
+    return new Promise( ( transactionComplete ) => {
+      userCollection.find({
+        username: userName
+      }).toArray(function (err, result) {
+        const [user] = result;
+        const { 
+          userId,
+          stocksOwned,
+          cashValue
+        } = user as UserEntry;
+        transactionsCollection.find( {
+          authorizingUserId: userId
+        } ).toArray( function( err, result ){
+          if( err ) throw err;
+            result.sort( ( a,b ) => { return moment(a.timestamp).format() > moment(b.timestamp).format() ? 1:-1; });
+            transactionComplete( result );
+        });
+      });
+    });
+  }
 }

@@ -1,6 +1,7 @@
 import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { StockHistoricalData } from './models/stock-historical-data.model';
 import { Stock } from './models/stock.model';
+import { TransactionHistoricalData } from './models/transaction-historical-data.model';
 import { Transaction } from './models/transaction.model';
 import { User } from './models/user.model';
 import { StockService } from './stock.service';
@@ -56,6 +57,21 @@ export class StockResolver {
       quantity,
       userName
     });
+  }
+
+  @Query((returns) => [TransactionHistoricalData], { name: 'transactionHistory' })
+  async getTransactionHistory(
+    @Args('userName') userName: string,
+    @Args('startDate') startDate: string,
+    @Args('endDate') endDate: string
+  ) {
+    return this.stockService.getTransactionHistory(
+      {
+        userName,
+        startDate,
+        endDate,
+      }
+    );
   }
 
   @Query((returns) => [Stock], { name: 'getOwnedStocks' })
