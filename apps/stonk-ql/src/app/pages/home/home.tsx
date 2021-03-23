@@ -84,7 +84,7 @@ export const Home = () => {
           {stocksOwned &&
             stocksOwned.map((asset, key) => (
               <NavLink to={`/stonk?${asset.ticker}`} key={key}>
-                <PortfolioTile ticker={asset.ticker} />
+                <PortfolioTile asset={asset} />
               </NavLink>
             ))}
         </div>

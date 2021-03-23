@@ -5,14 +5,14 @@ import AreaChart from '../../components/charts/area/area';
 import styles from './portfolio-tile.module.scss';
 
 interface PortfolioTileProps {
-  ticker: string;
+  asset: { ticker: string; quantity: number };
 }
 
-export const PortfolioTile = memo(({ ticker }: PortfolioTileProps) => {
+export const PortfolioTile = memo(({ asset }: PortfolioTileProps) => {
   const { loading, error, data } = useQuery(gql`
   {
     stockHistorical(
-      stockTicker: "${ticker}"
+      stockTicker: "${asset.ticker}"
       startDate: "2021-01-02"
       endDate: "2021-03-01"
     ) {
@@ -25,7 +25,11 @@ export const PortfolioTile = memo(({ ticker }: PortfolioTileProps) => {
 
   return (
     <div className={styles.portfolioTile}>
-      <span>{ticker}</span>
+      <span>
+        {asset.quantity}
+        {'   '}
+        {asset.ticker}
+      </span>
       {data && (
         <ParentSize>
           {({ width, height }) => (

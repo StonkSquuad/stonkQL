@@ -1,6 +1,6 @@
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
-import { Typography } from 'antd';
+import { notification, Typography } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -60,6 +60,15 @@ export const Stonk = () => {
     }
   `);
 
+  const openNotification = (type, count) => {
+    const args = {
+      message: 'Confirmation of trade',
+      description: `You have successfully ${type} ${count} shares of ${ticker}.`,
+      duration: 0,
+    };
+    notification.open(args);
+  };
+
   const dateChange = (days) => {
     setStartDay(days);
   };
@@ -68,11 +77,13 @@ export const Stonk = () => {
     toggleBuyDialog(false);
     setBuyAmount(shares);
     buyStonks();
+    openNotification('bought', shares);
   };
   const handleSell = (shares) => {
     toggleSellDialog(false);
     setSellAmount(shares);
     sellStonks();
+    openNotification('sold', shares);
   };
 
   if (loading) {
@@ -82,8 +93,14 @@ export const Stonk = () => {
       <div className={styles.stonk}>
         {data && (
           <div className={styles.title}>
-            <Title>{data.stock[0].name}</Title>
-            <Title>${data.stockHistorical.slice(-1).pop().close}</Title>
+            <div>
+              <Title>{data.stock[0].name}</Title>
+              <div>You own 0 shares</div>
+            </div>
+            <div className={styles.rightSide}>
+              <Title>${data.stockHistorical.slice(-1).pop().close}</Title>
+              <div>Current price</div>
+            </div>
           </div>
         )}
         {data && (
