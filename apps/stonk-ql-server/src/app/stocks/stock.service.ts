@@ -82,7 +82,7 @@ export class StockService {
       )
       .toPromise()
       .then((response) => {
-        response.data.results.map((result) => ({
+        return response.data.results.map((result) => ({
           date: moment(result.t).toISOString(),
           close: result.c,
           id: stockTicker
