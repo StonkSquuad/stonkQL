@@ -16,4 +16,7 @@ export class User {
   
   @Field({ nullable: true })
   userId: number;
+  
+  @Field({ nullable: true })
+  stocksValue: number;
 }

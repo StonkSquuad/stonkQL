@@ -82,6 +82,4 @@ export class StockResolver {
       userName
     );
   }
-
-
 }

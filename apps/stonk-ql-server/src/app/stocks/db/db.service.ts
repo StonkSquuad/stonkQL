@@ -25,6 +25,7 @@ interface UserEntry {
   readonly cashValue?: number;
   readonly userId?: number;
   readonly stocksOwned?: string;
+  readonly stocksValue?: number;
 }
 @Injectable()
 export class DbService {
@@ -38,7 +39,11 @@ export class DbService {
 
     const query = { username: userName };
 
-    return userCollection.findOne( query, {} );
+    const result = await userCollection.findOne( query, {} );
+
+    const stocksOwned = JSON.parse( result.stocksOwned ).map( o => o.ticker );
+
+    return result;
   }
 
   async getOwnedStock( userName: string ): Promise<any> {
@@ -86,7 +91,8 @@ export class DbService {
         const { 
           userId,
           stocksOwned,
-          cashValue
+          cashValue,
+          stocksValue
         } = user as UserEntry;
         // Insert transaction to transactions collection
         transactionsCollection.insertOne(Object.assign( transactionOptions,{purchaseType: 'buy'}) , function(err, res) {
@@ -112,7 +118,8 @@ export class DbService {
           userCollection.updateOne( {userId: authorizingUserId },{
             $set: { 
               stocksOwned: JSON.stringify( stocksOwnedJson ),
-              cashValue: cashValue - purchasePrice*quantity
+              cashValue: cashValue - purchasePrice*quantity,
+              stocksValue: stocksValue + (purchasePrice*quantity)
             } 
           },(err,res)=>{
             if(err)throw err;
@@ -147,7 +154,8 @@ export class DbService {
       const { 
         userId,
         stocksOwned,
-        cashValue
+        cashValue,
+        stocksValue
       } = user as UserEntry;
 
       const transactionObject = Object.assign( transactionOptions,{purchaseType: 'sell'});
@@ -170,7 +178,8 @@ export class DbService {
         userCollection.updateOne( {userId: authorizingUserId },{
           $set: { 
             stocksOwned: filteredStock,
-            cashValue: newCashValue
+            cashValue: newCashValue,
+            stocksValue: stocksValue - (purchasePrice*quantity)
           } 
         },(err,res)=>{
           if(err)throw err;

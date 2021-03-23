@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import AreaChart from '../../components/charts/area/area';
 import PortfolioTile from '../../components/portfolio-tile/portfolio-tile';
 import styles from './home.module.scss';
+import { gql, useQuery } from '@apollo/client';
 
 const { Title } = Typography;
 
@@ -29,20 +30,37 @@ const ASSETS = [
     ticker: 'AMC',
   },
 ];
-
+//getTransactionHistory
 export const Home = () => {
-  return (
+  const { loading, error, data } = useQuery(gql`
+  {
+    transactionHistory(userName:"cmp11290",startDate:"2020-01-01",endDate:"2021-03-28")
+    {
+      date,
+      close
+    }
+    user(username:"cmp11290"){
+      cashValue,
+      stocksValue
+    }
+  }
+`);
+
+const cashValue = data?.user?.cashValue || 0;
+const stocksValue = data?.user?.stocksValue || 0;
+return (
     <div className={styles.home}>
       <div className={styles.title}>
         <Title>Investing</Title>
-        <Title>$1,324.56</Title>
+        <Title>Stocks value: ${stocksValue}</Title>
+        <Title>Cash value: ${cashValue}</Title>
       </div>
       <ParentSize>
         {({ width, height }) => (
           <div className={styles.areaChart}>
             <AreaChart
               axis
-              data={appleStock}
+              data={data?.transactionHistory}
               width={width}
               height={height}
               tooltipVisible
