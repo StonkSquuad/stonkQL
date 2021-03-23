@@ -82,4 +82,14 @@ export class StockResolver {
       userName
     );
   }
+
+  @Query((returns) => User, { name: 'getOwnedStockForTicker' })
+  async getOwnedStockForTicker(
+    @Args('userName') userName: string,
+    @Args('ticker') ticker: string,
+  ) {
+    return this.stockService.getOwnedStockForTicker(
+      userName, ticker
+    );
+  }
 }

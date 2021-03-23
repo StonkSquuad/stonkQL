@@ -51,6 +51,23 @@ export class DbService {
     return JSON.parse( stocksOwned );
   };
 
+  async getOwnedStockForTicker( userName: string, ticker:string ): Promise<any> {
+    const client = await this.mongoClient;
+    const database = client.db('stock-database');
+    const userCollection = database.collection('stockusers');
+
+    const query = { username: userName };
+
+    const result = await userCollection.findOne( query, {} );
+
+    const jsonResult = JSON.parse( result.stocksOwned );
+
+    const [filterResult] = jsonResult.filter( o => o.ticker === ticker );
+    return {
+      stocksOwned: filterResult.quantity
+    }; 
+  };
+
   async getAccountEvaluation( userName: string, currentTicker: string, currentTickerPrice: number ): Promise<any> {
     const { stocksOwned, cashValue } = await this.getUserInfo( userName );
     const stocksOwnedJson = JSON.parse( stocksOwned ) || [];

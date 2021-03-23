@@ -65,6 +65,10 @@ export class StockService {
     return this.dbService.getOwnedStock( userName );
   }
 
+  async getOwnedStockForTicker(userName: string, ticker: string ): Promise<any> {
+    return this.dbService.getOwnedStockForTicker( userName, ticker );
+  }
+
   async getStockPriceVantage(ticker: string): Promise<any> {
     return this.httpService
       .get(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=${process.env.ALPHA_VANTAGE_API_KEY}`)
