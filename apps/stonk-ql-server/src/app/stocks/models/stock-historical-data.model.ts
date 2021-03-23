@@ -8,6 +8,6 @@ export class StockHistoricalData {
   @Field(type => Float)
   close: number;
 
-  @Field(type => Int)
-  id: number;
+  @Field(type => String)
+  id: string;
 }
