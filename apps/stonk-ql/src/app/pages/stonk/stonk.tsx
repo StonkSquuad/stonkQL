@@ -22,6 +22,7 @@ export const Stonk = () => {
   const [buyAmount, setBuyAmount] = useState(1);
   const [sellDialog, toggleSellDialog] = useState(false);
   const [sellAmount, setSellAmount] = useState(1);
+
   const { loading, error, data } = useQuery(gql`
     {
       stockHistorical(
@@ -35,6 +36,9 @@ export const Stonk = () => {
       }
       stock(stockTicker: "${ticker}") {
         name
+      }
+      getOwnedStockForTicker( userName: "cmp11290", ticker:"${ticker}" ) {
+        stocksOwned
       }
     }
   `);
@@ -95,7 +99,11 @@ export const Stonk = () => {
           <div className={styles.title}>
             <div>
               <Title>{data.stock[0].name}</Title>
-              <div>You own 0 shares</div>
+              <div>
+                You own{' '}
+                {data ? data?.getOwnedStockForTicker?.stocksOwned : 'N/A'}{' '}
+                shares
+              </div>
             </div>
             <div className={styles.rightSide}>
               <Title>${data.stockHistorical.slice(-1).pop().close}</Title>
