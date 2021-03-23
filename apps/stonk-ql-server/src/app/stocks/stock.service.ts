@@ -132,7 +132,6 @@ export class StockService {
       cashValue
     } = await this.dbService.getUserInfo(userName);
 
-    console.log( name, username, userId, stocksOwned, cashValue );
     // check to see if the user has enough money
     if( currentStockPrice*quantity <= cashValue ) {
       // Push new transaction
@@ -163,6 +162,10 @@ export class StockService {
     } = purchaseOptions;
     // get current value of stock
     const currentStockPrice = await this.getStockPriceVantage( stockTicker );
+
+    if( currentStockPrice === null ) {
+      throw new Error( "Unable to get stock price");
+    }
     const {
       name,
       username,
@@ -173,6 +176,8 @@ export class StockService {
     // check to see if the user has enough money
 
     const stocksOwnedJson = JSON.parse( stocksOwned ).find( el => el.ticker === stockTicker );
+    console.log( stocksOwnedJson );
+    console.log( purchaseOptions );
     if( stocksOwnedJson && stocksOwnedJson.quantity >= quantity ) {
       // Push new transaction
       return this.dbService.runSaleTransaction( { 
@@ -203,12 +208,12 @@ export class StockService {
     const timestampsObj = {};
     const timestampCollection = [];
     historicalData.forEach( ( data ) => {
-      const timestamp = data.timestamp;//.match( /[0-9]{4}\-[0-9]{2}\-[0-9]{2}/gi )[0];
+      const timestamp = data.timestamp;
       if( !timestampsObj[ data.timestamp ] ) {
         timestampCollection.push( data.timestamp );
         timestampsObj[ data.timestamp ] = data.purchasePrice * data.quantity;
       } else {
-        timestampsObj[ data.timestamp ] += data.purchasePrice * data.quantity;
+        timestampsObj[ data.timestamp ] = data.purchaseType === 'buy' ? timestampsObj[ data.timestamp ] + ( data.purchasePrice * data.quantity ) : timestampsObj[ data.timestamp ] - ( data.purchasePrice * data.quantity );
       }
     });
 

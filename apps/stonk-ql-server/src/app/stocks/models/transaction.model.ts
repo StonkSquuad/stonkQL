@@ -7,11 +7,11 @@ export class Transaction {
   ticker: string;
 
   @Field({ nullable: true })
-  totalStockValue: number;
+  totalStockValue: number | null;
 
   @Field({ nullable: true })
   totalCashValue: number;
-  
+
   @Field({ nullable: true })
   currentPrice: number;
 }

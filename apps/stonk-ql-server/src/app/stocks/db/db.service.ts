@@ -56,7 +56,7 @@ export class DbService {
 
     return {
       ticker: currentTicker,
-      totalStockValue: quantity*currentTickerPrice,
+      totalStockValue: ( quantity*currentTickerPrice ) || 0,
       totalCashValue: cashValue,
       currentPrice: currentTickerPrice
     };
@@ -150,28 +150,27 @@ export class DbService {
         cashValue
       } = user as UserEntry;
 
+      const transactionObject = Object.assign( transactionOptions,{purchaseType: 'sell'});
+
       // Insert transaction to transactions collection
-      transactionsCollection.insertOne(Object.assign( transactionOptions,{purchaseType: 'sell'}), function(err, res) {
+      transactionsCollection.insertOne(transactionObject, function(err, res) {
         if (err) throw err;
         // Update user collection stocks owned and such
         let stocksOwnedJson = JSON.parse( stocksOwned ) || [];
-        const prevOwnedStock = stocksOwnedJson.find( ( el ) => el.ticker === tickerSymbol);
-        const otherStock = stocksOwnedJson.filter( ( el ) => el.ticker !== tickerSymbol) || [];
+        const prevOwnedStock = stocksOwnedJson.filter( ( el ) => el.ticker === tickerSymbol) || [];
+        const otherStock = stocksOwnedJson.filter( ( el ) => el.ticker !== tickerSymbol ) || [];
+        let newCashValue=0;
 
-         if( prevOwnedStock ) {      
-           prevOwnedStock.quantity -= quantity;
+        prevOwnedStock[0].quantity -= quantity;
+        newCashValue = cashValue + (purchasePrice*quantity)
+        
 
-           if( ( prevOwnedStock.quantity - quantity ) > 0 ) {
-            otherStock.push( prevOwnedStock ); 
-            stocksOwnedJson = otherStock;
-           } else {
-            stocksOwnedJson = otherStock;
-           }
-         }
+        const filteredStock = JSON.stringify( prevOwnedStock.concat( otherStock ).filter( (el) => el.quantity > 0) );
+
         userCollection.updateOne( {userId: authorizingUserId },{
           $set: { 
-            stocksOwned: JSON.stringify( stocksOwnedJson ),
-            cashValue: cashValue + purchasePrice*quantity
+            stocksOwned: filteredStock,
+            cashValue: newCashValue
           } 
         },(err,res)=>{
           if(err)throw err;
