@@ -10,6 +10,12 @@ interface HistoricalStockOptions {
   endDate: string;
 }
 
+interface StockPurchase {
+  stockTicker: string;
+  quantity: number;
+  userName: string;
+}
+
 @Injectable()
 export class StockService {
   private static readonly BASE_URL = `https://api.polygon.io/v2`;
@@ -75,11 +81,13 @@ export class StockService {
         }
       )
       .toPromise()
-      .then((response) =>
+      .then((response) => {
         response.data.results.map((result) => ({
           date: moment(result.t).toISOString(),
           close: result.c,
+          id: stockTicker
         }))
+        }
       )
       .catch((error) => {
         // handle error
@@ -91,12 +99,40 @@ export class StockService {
     return this.dbService.getUserInfo(userName);
   }
 
-  /*async buyStock(stockTicker: string, quantity: number) {
+  async buyStock(purchaseOptions: StockPurchase) {
+    const {
+      stockTicker,
+      quantity,
+      userName
+    } = purchaseOptions;
     // get current value of stock
-    const currentStockPrice = await this.getStockHistorical({ stockTicker, startDate: moment().format('YYYY-MM-DD'), endDate: moment().format('YYYY-MM-DD')})
+    const currentStockPrice = await this.getStockHistorical({ stockTicker, startDate: moment().format('YYYY-MM-DD'), endDate: moment().format('YYYY-MM-DD')});
+    const {
+      name,
+      username,
+      userId,
+      stocksCumulativeValue,
+      stocksOwned,
+      cashValue
+    } = await this.dbService.getUserInfo(userName);
     // check to see if the user has enough money
+    console.log( 'Stock Price: ', currentStockPrice );
+    console.log( 'Quantity: ', quantity );
+    console.log( 'Users Cash Value: ', cashValue );
+
+    if( currentStockPrice*quantity <= cashValue ) {
+      // Push new transaction
+      await this.dbService.runTransaction( { 
+        quantity, timestamp: moment().toISOString(), authorizingUserId: userId,purchasePrice:currentStockPrice,tickerSymbol:stockTicker }
+        );
+
+      // Update user file
+    }
+    else {
+      throw new Error( 'User does not have sufficient funds' );
+    }
     // if no, throw you are poor exception
     // if yes, update the stocks array
     
-  }*/
+  }
 }
