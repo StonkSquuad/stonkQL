@@ -32,6 +32,7 @@ export const Login = () => {
         </div>
         <div>
           <Input
+            type="password"
             placeholder="Enter your password"
             prefix={<KeyOutlined className="site-form-item-icon" />}
             suffix={
