@@ -8,6 +8,12 @@
     h1 {
       margin: 0;
     }
+    .values {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+    }
   }
   .areaChart {
     height: 500px;

@@ -1,4 +1,4 @@
-import appleStock from '@visx/mock-data/lib/mocks/appleStock';
+import { gql, useQuery } from '@apollo/client';
 import ParentSize from '@visx/responsive/lib/components/ParentSize';
 import { Typography } from 'antd';
 import React from 'react';
@@ -6,7 +6,6 @@ import { NavLink } from 'react-router-dom';
 import AreaChart from '../../components/charts/area/area';
 import PortfolioTile from '../../components/portfolio-tile/portfolio-tile';
 import styles from './home.module.scss';
-import { gql, useQuery } from '@apollo/client';
 
 const { Title } = Typography;
 
@@ -30,30 +29,36 @@ const ASSETS = [
     ticker: 'AMC',
   },
 ];
-//getTransactionHistory
+
 export const Home = () => {
   const { loading, error, data } = useQuery(gql`
-  {
-    transactionHistory(userName:"cmp11290",startDate:"2020-01-01",endDate:"2021-03-28")
     {
-      date,
-      close
+      transactionHistory(
+        userName: "cmp11290"
+        startDate: "2020-01-01"
+        endDate: "2021-03-28"
+      ) {
+        date
+        close
+      }
+      user(username: "cmp11290") {
+        cashValue
+        stocksValue
+      }
     }
-    user(username:"cmp11290"){
-      cashValue,
-      stocksValue
-    }
-  }
-`);
+  `);
 
-const cashValue = data?.user?.cashValue || 0;
-const stocksValue = data?.user?.stocksValue || 0;
-return (
+  const cashValue = data?.user?.cashValue || 0;
+  const stocksValue = data?.user?.stocksValue || 0;
+
+  return (
     <div className={styles.home}>
       <div className={styles.title}>
         <Title>Investing</Title>
-        <Title>Stocks value: ${stocksValue}</Title>
-        <Title>Cash value: ${cashValue}</Title>
+        <div className={styles.values}>
+          <div>Stocks value: ${stocksValue}</div>
+          <div>Cash value: ${cashValue}</div>
+        </div>
       </div>
       <ParentSize>
         {({ width, height }) => (

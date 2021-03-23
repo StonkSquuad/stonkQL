@@ -1,10 +1,4 @@
-import {
-  ApolloClient,
-  ApolloProvider,
-  defaultDataIdFromObject,
-  InMemoryCache,
-} from '@apollo/client';
-import { LocalStorageWrapper, persistCache } from 'apollo3-cache-persist';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Nav from './components/nav/nav';
@@ -13,26 +7,26 @@ import Login from './pages/login/login';
 import Stonk from './pages/stonk/stonk';
 
 export function App() {
-  const cache = new InMemoryCache({
-    dataIdFromObject(responseObject) {
-      switch (responseObject.__typename) {
-        case 'Stock':
-          return `Stock:${responseObject.name}`;
-        case 'StockHistoricalData':
-          return `StockHistorical:${responseObject.ticker}:${responseObject.date}`;
-        default:
-          return defaultDataIdFromObject(responseObject);
-      }
-    },
-  });
+  // const cache = new InMemoryCache({
+  //   dataIdFromObject(responseObject) {
+  //     switch (responseObject.__typename) {
+  //       case 'Stock':
+  //         return `Stock:${responseObject.name}`;
+  //       case 'StockHistoricalData':
+  //         return `StockHistorical:${responseObject.ticker}:${responseObject.date}`;
+  //       default:
+  //         return defaultDataIdFromObject(responseObject);
+  //     }
+  //   },
+  // });
 
-  persistCache({
-    cache,
-    storage: new LocalStorageWrapper(window.localStorage),
-  });
+  // persistCache({
+  //   cache,
+  //   storage: new LocalStorageWrapper(window.localStorage),
+  // });
 
   const client = new ApolloClient({
-    cache,
+    cache: new InMemoryCache(),
     uri: 'http://localhost:3333/graphql',
   });
 
