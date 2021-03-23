@@ -44,12 +44,17 @@ export const Home = () => {
       user(username: "cmp11290") {
         cashValue
         stocksValue
+        stocksOwned
       }
     }
   `);
 
   const cashValue = data?.user?.cashValue || 0;
   const stocksValue = data?.user?.stocksValue || 0;
+  let stocksOwned = [];
+  if (data) {
+    stocksOwned = JSON.parse(data?.user?.stocksOwned);
+  }
 
   return (
     <div className={styles.home}>
@@ -76,11 +81,12 @@ export const Home = () => {
       <div className={styles.portfolio}>
         <Title level={2}>Portfolio</Title>
         <div className={styles.assetList}>
-          {ASSETS.map((asset, key) => (
-            <NavLink to={`/stonk?${asset.ticker}`} key={key}>
-              <PortfolioTile ticker={asset.ticker} />
-            </NavLink>
-          ))}
+          {stocksOwned &&
+            stocksOwned.map((asset, key) => (
+              <NavLink to={`/stonk?${asset.ticker}`} key={key}>
+                <PortfolioTile ticker={asset.ticker} />
+              </NavLink>
+            ))}
         </div>
       </div>
     </div>

@@ -24,8 +24,11 @@
     margin-top: 40px;
     .assetList {
       display: flex;
-      justify-content: space-between;
       margin-top: 20px;
+      a {
+        margin-right: 50px;
+        display: block;
+      }
     }
   }
 }
