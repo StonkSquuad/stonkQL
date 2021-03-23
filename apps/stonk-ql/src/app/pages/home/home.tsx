@@ -61,8 +61,8 @@ export const Home = () => {
       <div className={styles.title}>
         <Title>Investing</Title>
         <div className={styles.values}>
-          <div>Stocks value: ${stocksValue}</div>
-          <div>Cash value: ${cashValue}</div>
+          <div>Stocks value: ${stocksValue.toFixed(2)}</div>
+          <div>Cash value: ${cashValue.toFixed(2)}</div>
         </div>
       </div>
       <ParentSize>
