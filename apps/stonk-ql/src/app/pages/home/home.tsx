@@ -9,27 +9,6 @@ import styles from './home.module.scss';
 
 const { Title } = Typography;
 
-const ASSETS = [
-  {
-    ticker: 'TSLA',
-  },
-  {
-    ticker: 'GME',
-  },
-  {
-    ticker: 'DT',
-  },
-  {
-    ticker: 'AAPL',
-  },
-  {
-    ticker: 'IBM',
-  },
-  {
-    ticker: 'AMC',
-  },
-];
-
 export const Home = () => {
   const { loading, error, data } = useQuery(gql`
     {

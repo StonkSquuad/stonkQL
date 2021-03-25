@@ -1,5 +1,5 @@
 import { AxisLeft } from '@visx/axis';
-import { curveMonotoneX } from '@visx/curve';
+import { curveLinear } from '@visx/curve';
 import { localPoint } from '@visx/event';
 import { LinearGradient } from '@visx/gradient';
 import { GridColumns, GridRows } from '@visx/grid';
@@ -169,7 +169,7 @@ export const AreaChart = withTooltip<AreaProps, TooltipData>(
               strokeWidth={1}
               stroke="url(#area-gradient)"
               fill="url(#area-gradient)"
-              curve={curveMonotoneX}
+              curve={curveLinear}
             />
             <Bar
               x={margin.left}
