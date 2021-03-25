@@ -1,6 +1,6 @@
 # StonkQL
 
-StonkQL was developed by the StonkSquuad as a 24 hour Dynatrace Innovation day project. The goal for the team was to learn how to use GraphQL and the visx React visualization library from AirBnb in a fullstack application. The financial metrics are pulled from the Polygon.io stock API.
+StonkQL was developed by the StonkSquuad as a 24 hour Dynatrace Innovation day project. The goal for the team was to learn how to use GraphQL and the visx React visualization library from AirBnb in a fullstack application. The financial metrics are pulled from the [Polygon.io](https://polygon.io) stock API.
 
 Why? Because we like the stock 🚀
 
